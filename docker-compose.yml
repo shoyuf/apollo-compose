@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  apollo-quick-start:
+    image: nobodyiam/apollo-quick-start
+    container_name: apollo-quick-start
+    depends_on:
+      - apollo-db
+    networks:
+      - kong-net
+      - apollo-net
+
+  apollo-db:
+    image: mysql:5.7
+    container_name: apollo-db
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - kong-net
+      - apollo-net
+
+networks:
+  kong-net:
+    external:
+      name: kong-net
+  apollo-net:
+    external:
+      name: apollo-net
